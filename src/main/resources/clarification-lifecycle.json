@@ -1,0 +1,66 @@
+{
+  "machineId": "clarification_lifecycle_v1",
+  "initialState": "NEW",
+  "states": [
+    "NEW",
+    "OPEN",
+    "COMPLETED",
+    "CLOSED"
+  ],
+  "endStates": [
+    "CLOSED"
+  ],
+  "transitions": [
+    {
+      "source": "NEW",
+      "target": "OPEN",
+      "event": "CREATE",
+      "action": {
+        "name": "logAction",
+        "params": {
+          "message": "Clarification has been created and is now OPEN."
+        }
+      }
+    },
+    {
+      "source": "OPEN",
+      "target": "COMPLETED",
+      "event": "COMPLETE",
+      "guard": {
+        "name": "headerValueGuard",
+        "params": {
+          "headerName": "isAuthorized",
+          "requiredValue": true
+        }
+      },
+      "action": {
+        "name": "logAction",
+        "params": {
+          "message": "Authorization confirmed. Clarification marked as COMPLETE."
+        }
+      }
+    },
+    {
+      "source": "OPEN",
+      "target": "OPEN",
+      "event": "ADD_COMMENT",
+      "action": {
+        "name": "logAction",
+        "params": {
+          "message": "A new comment was added."
+        }
+      }
+    },
+    {
+      "source": "COMPLETED",
+      "target": "CLOSED",
+      "event": "RESOLVE",
+      "action": {
+        "name": "logAction",
+        "params": {
+          "message": "Clarification has been RESOLVED and is now CLOSED."
+        }
+      }
+    }
+  ]
+}
